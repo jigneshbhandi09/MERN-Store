@@ -1,6 +1,6 @@
 // src/components/ProductList.tsx
 import { useEffect, useState } from "react";
-import "./productlist.css";
+import "./productList.css";
 import { useSearch } from "../context/SearchContext";
 import { Link } from "react-router-dom"; 
 
