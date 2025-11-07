@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+// src/components/ProductList.tsx
+import { useEffect, useState } from "react";
 import "./productlist.css";
 import { useSearch } from "../context/SearchContext";
-import { Link } from "react-router-dom"; // ✅ Import Link for navigation
+import { Link } from "react-router-dom"; 
 
 interface Product {
   _id: string;
@@ -25,21 +26,21 @@ const ProductList: React.FC = () => {
   // ✅ Use environment variable for backend URL
   const BACKEND_URL = import.meta.env.VITE_API_URL;
 
-  // Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(`${BACKEND_URL}/api/products`);
         if (!res.ok) throw new Error("Failed to fetch products");
-        const data = await res.json();
+        const data: Product[] = await res.json();
 
         setProducts(data);
         setFilteredProducts(data);
 
-        // Extract unique categories dynamically
-        const uniqueCategories = Array.from(
-          new Set(data.map((item: Product) => item.category).filter(Boolean))
-        );
+        // Fix: ensure types are string[]
+        const uniqueCategories: string[] = Array.from(
+          new Set(data.map((item) => item.category).filter(Boolean))
+        ) as string[];
+
         setCategories(uniqueCategories);
       } catch (err: any) {
         setError(err.message);
@@ -51,7 +52,7 @@ const ProductList: React.FC = () => {
     fetchProducts();
   }, [BACKEND_URL]);
 
-  // Filter + Sort + Search logic
+  // Filter + Sort + Search
   useEffect(() => {
     let filtered = [...products];
 
@@ -73,7 +74,6 @@ const ProductList: React.FC = () => {
 
   return (
     <div className="main-container">
-      {/* Sidebar */}
       <aside className="sidebar">
         <h2>FILTERS</h2>
 
@@ -108,7 +108,6 @@ const ProductList: React.FC = () => {
         </div>
       </aside>
 
-      {/* Product section */}
       <section className="product-section">
         <div className="section-header">
           <h2>

@@ -1,14 +1,11 @@
 // src/main.tsx
-import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom/client"; // Only ReactDOM needed
 import App from "./App";
 import "./index.css";
-import { SearchProvider } from "./context/SearchContext"; // ✅ import this
+import { SearchProvider } from "./context/SearchContext"; // ✅ context wrapper
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <SearchProvider>  {/* ✅ wrap App inside provider */}
-      <App />
-    </SearchProvider>
-  </React.StrictMode>
+  <SearchProvider>
+    <App />
+  </SearchProvider>
 );

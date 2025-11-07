@@ -1,21 +1,40 @@
-import React, { useEffect, useState } from "react";
+// src/components/ProductDetails.tsx
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FaStar, FaRegStar, FaStarHalfAlt } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 import "./ProductDetail.css";
 
-const ProductDetails = () => {
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  category?: string;
+  description?: string;
+  rating?: number;
+}
+
+const ProductDetails: React.FC = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const { addToCart } = useCart();
 
   const BACKEND_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/api/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => setProduct(data))
-      .catch((err) => console.error("Error fetching product:", err));
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/products/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch product");
+        const data: Product = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error("Error fetching product:", err);
+      }
+    };
+
+    fetchProduct();
   }, [id, BACKEND_URL]);
 
   const renderStars = (rating: number) => {
@@ -46,7 +65,7 @@ const ProductDetails = () => {
           <div className="rating">{renderStars(product.rating || 4.5)}</div>
           <p className="detail-price">${product.price}</p>
           <p className="detail-category">
-            <strong>Category:</strong> {product.category}
+            <strong>Category:</strong> {product.category || "N/A"}
           </p>
           <p className="detail-description">
             {product.description ||
