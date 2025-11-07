@@ -1,0 +1,189 @@
+/* === HEADER (Keep Existing) === */
+header {
+  width: 100vw;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+header input[type="text"] {
+  width: 400px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: #111;
+  color: #fff;
+}
+
+/* === MAIN CONTAINER === */
+.main-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100vw;
+  padding: 40px 60px;
+  box-sizing: border-box;
+  gap: 50px;
+  background: #fff;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: 250px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* Filter group */
+.filter-group {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.filter-group h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-group input[type="checkbox"] {
+  accent-color: #000;
+  width: 16px;
+  height: 16px;
+}
+
+/* === PRODUCT SECTION === */
+.product-section {
+  flex: 1;
+  width: calc(100% - 290px);
+  padding-right: 40px;
+}
+
+/* Section Header (Title + Sort Dropdown) */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.section-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.section-header h2 span {
+  font-weight: 400;
+  color: #333;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+/* === PRODUCT GRID === */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+/* === PRODUCT CARD === */
+.product-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.product-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  font-size: 16px;
+  margin: 10px 0 5px 0;
+  font-weight: 600;
+}
+
+.product-card .price {
+  font-weight: 700;
+  color: #007bff;
+  font-size: 15px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: static;
+    margin-bottom: 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
