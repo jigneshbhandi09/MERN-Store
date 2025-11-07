@@ -22,8 +22,8 @@ const ProductList: React.FC = () => {
 
   const { searchTerm } = useSearch();
 
-  // Replace localhost with your Render backend URL
-  const BACKEND_URL = "https://mern-store-0w1i.onrender.com";
+  // ✅ Use environment variable for backend URL
+  const BACKEND_URL = import.meta.env.VITE_API_URL;
 
   // Fetch products from backend
   useEffect(() => {
@@ -49,30 +49,24 @@ const ProductList: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [BACKEND_URL]);
 
   // Filter + Sort + Search logic
   useEffect(() => {
     let filtered = [...products];
 
-    // Category filter
     if (selectedCategory && selectedCategory !== "All") {
       filtered = filtered.filter((p) => p.category === selectedCategory);
     }
 
-    // Search filter
     if (searchTerm.trim()) {
       filtered = filtered.filter((p) =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Sorting
-    if (sortOption === "Low to High") {
-      filtered.sort((a, b) => a.price - b.price);
-    } else if (sortOption === "High to Low") {
-      filtered.sort((a, b) => b.price - a.price);
-    }
+    if (sortOption === "Low to High") filtered.sort((a, b) => a.price - b.price);
+    else if (sortOption === "High to Low") filtered.sort((a, b) => b.price - a.price);
 
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategory, sortOption, products]);
@@ -86,7 +80,6 @@ const ProductList: React.FC = () => {
         <div className="filter-group">
           <h3>CATEGORIES</h3>
 
-          {/* "All" button */}
           <label className="category-option">
             <input
               type="radio"
@@ -97,7 +90,6 @@ const ProductList: React.FC = () => {
             All
           </label>
 
-          {/* Dynamic categories */}
           {categories.length > 0 ? (
             categories.map((cat) => (
               <label key={cat} className="category-option">
@@ -123,7 +115,6 @@ const ProductList: React.FC = () => {
             ALL <span>COLLECTIONS</span>
           </h2>
 
-          {/* Sort dropdown */}
           <select
             className="sort-select"
             value={sortOption}
@@ -142,7 +133,6 @@ const ProductList: React.FC = () => {
         ) : filteredProducts.length > 0 ? (
           <div className="product-grid">
             {filteredProducts.map((p) => (
-              // ✅ Each card wrapped in a Link
               <Link
                 to={`/product/${p._id}`}
                 key={p._id}

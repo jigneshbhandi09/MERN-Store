@@ -7,14 +7,16 @@ import "./ProductDetail.css";
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
-  const { addToCart } = useCart(); // ✅ use cart context
+  const { addToCart } = useCart();
+
+  const BACKEND_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`${BACKEND_URL}/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => setProduct(data))
       .catch((err) => console.error("Error fetching product:", err));
-  }, [id]);
+  }, [id, BACKEND_URL]);
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -51,12 +53,8 @@ const ProductDetails = () => {
               "This is a premium quality product made with high attention to detail."}
           </p>
 
-          {/* ✅ Buttons side by side */}
           <div className="product-buttons">
-            <button
-              className="add-cart-btn"
-              onClick={() => addToCart(product)} // <-- main functionality
-            >
+            <button className="add-cart-btn" onClick={() => addToCart(product)}>
               Add to Cart
             </button>
             <button className="add-cart-btn">Buy Now</button>
