@@ -22,11 +22,14 @@ const ProductList: React.FC = () => {
 
   const { searchTerm } = useSearch();
 
+  // Replace localhost with your Render backend URL
+  const BACKEND_URL = "https://mern-store-0w1i.onrender.com";
+
   // Fetch products from backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${BACKEND_URL}/api/products`);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
 
