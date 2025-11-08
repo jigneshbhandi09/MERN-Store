@@ -23,35 +23,36 @@ const ProductList: React.FC = () => {
 
   const { searchTerm } = useSearch();
 
-  const BACKEND_URL = import.meta.env.VITE_API_URL;
+  // ✅ Type-safe environment variable with fallback
+  const BACKEND_URL: string = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true); // Start loading
+        setLoading(true);
         const res = await fetch(`${BACKEND_URL}/api/products`);
-        if (!res.ok) throw new Error("Failed to fetch products");
+        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status}`);
         const data: Product[] = await res.json();
 
         setProducts(data);
         setFilteredProducts(data);
 
+        // Extract unique categories
         const uniqueCategories: string[] = Array.from(
           new Set(data.map((item) => item.category).filter(Boolean))
         ) as string[];
-
         setCategories(uniqueCategories);
       } catch (err: any) {
-        setError(err.message);
+        setError(err.message || "Unknown error occurred");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, [BACKEND_URL]);
 
-  // Filter + Sort + Search
+  // Filter, search, and sort
   useEffect(() => {
     let filtered = [...products];
 
@@ -71,12 +72,12 @@ const ProductList: React.FC = () => {
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategory, sortOption, products]);
 
-  // Skeleton Loader Component
+  // Skeleton loader component
   const SkeletonCard = () => (
     <div className="skeleton-card">
-      <div className="skeleton-image"></div>
-      <div className="skeleton-text"></div>
-      <div className="skeleton-text short"></div>
+      <div className="skeleton-image" />
+      <div className="skeleton-text" />
+      <div className="skeleton-text short" />
     </div>
   );
 
@@ -86,7 +87,6 @@ const ProductList: React.FC = () => {
         <h2>FILTERS</h2>
         <div className="filter-group">
           <h3>CATEGORIES</h3>
-
           <label className="category-option">
             <input
               type="radio"
