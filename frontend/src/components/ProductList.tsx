@@ -24,16 +24,19 @@ const ProductList: React.FC = () => {
   const { searchTerm } = useSearch();
 
   // ✅ Type-safe environment variable with fallback
-  const BACKEND_URL: string = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const BACKEND_URL: string =
+    (import.meta.env.VITE_API_URL as string) || "https://mern-store-0w1i.onrender.com";
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${BACKEND_URL}/api/products`);
-        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status}`);
-        const data: Product[] = await res.json();
+        setError(""); // Reset error on each fetch
 
+        const res = await fetch(`${BACKEND_URL}/api/products`);
+        if (!res.ok) throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
+
+        const data: Product[] = await res.json();
         setProducts(data);
         setFilteredProducts(data);
 
@@ -43,6 +46,7 @@ const ProductList: React.FC = () => {
         ) as string[];
         setCategories(uniqueCategories);
       } catch (err: any) {
+        console.error("Fetch error:", err);
         setError(err.message || "Unknown error occurred");
       } finally {
         setLoading(false);
