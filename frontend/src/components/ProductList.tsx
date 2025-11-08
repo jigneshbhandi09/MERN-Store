@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
 import { useSearch } from "../context/SearchContext";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 
 interface Product {
   _id: string;
@@ -23,12 +23,12 @@ const ProductList: React.FC = () => {
 
   const { searchTerm } = useSearch();
 
-  // ✅ Use environment variable for backend URL
   const BACKEND_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true); // Start loading
         const res = await fetch(`${BACKEND_URL}/api/products`);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data: Product[] = await res.json();
@@ -36,7 +36,6 @@ const ProductList: React.FC = () => {
         setProducts(data);
         setFilteredProducts(data);
 
-        // Fix: ensure types are string[]
         const uniqueCategories: string[] = Array.from(
           new Set(data.map((item) => item.category).filter(Boolean))
         ) as string[];
@@ -45,7 +44,7 @@ const ProductList: React.FC = () => {
       } catch (err: any) {
         setError(err.message);
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading
       }
     };
 
@@ -72,11 +71,19 @@ const ProductList: React.FC = () => {
     setFilteredProducts(filtered);
   }, [searchTerm, selectedCategory, sortOption, products]);
 
+  // Skeleton Loader Component
+  const SkeletonCard = () => (
+    <div className="skeleton-card">
+      <div className="skeleton-image"></div>
+      <div className="skeleton-text"></div>
+      <div className="skeleton-text short"></div>
+    </div>
+  );
+
   return (
     <div className="main-container">
       <aside className="sidebar">
         <h2>FILTERS</h2>
-
         <div className="filter-group">
           <h3>CATEGORIES</h3>
 
@@ -126,7 +133,11 @@ const ProductList: React.FC = () => {
         </div>
 
         {loading ? (
-          <p>Loading products...</p>
+          <div className="product-grid">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <SkeletonCard key={idx} />
+            ))}
+          </div>
         ) : error ? (
           <p style={{ color: "red" }}>Error: {error}</p>
         ) : filteredProducts.length > 0 ? (
@@ -138,7 +149,7 @@ const ProductList: React.FC = () => {
                 className="product-card"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <img src={p.image} alt={p.name} />
+                <img src={p.image} alt={p.name} loading="lazy" />
                 <h3>{p.name}</h3>
                 <p className="price">${p.price}</p>
                 {p.category && <small>{p.category}</small>}
